@@ -25,7 +25,7 @@ const CarDetails = () => {
   }, [id]);
 
   return (
-    <Box sx={{ overflow: 'hidden', paddingTop: '20px' }}>
+    <Box sx={{ overflow: 'hidden', padding: '1.5rem' }}>
       {loading ? (
         <Typography variant="h4">Loading...</Typography>
       ) : (
