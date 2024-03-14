@@ -1,30 +1,26 @@
-import { useState } from 'react';
 import { TextField, Button, Grid, Input } from '@mui/material';
 
-function CarmForm() {
-    const [formData, setFormData] = useState({
-        marca: '',
-        modelo: '',
-        ano: '',
-        preco: '',
-        cor: '',
-        quilometragem: '',
-        placa: '',
-        cidade: '',
-        fotos: [],
-        dataCadastro: ''
-    });
+export interface FormData {
+    marca: '',
+    modelo: '',
+    ano: '',
+    preco: '',
+    cor: '',
+    quilometragem: '',
+    placa: '',
+    cidade: '',
+    fotos: [],
+    dataCadastro: ''
+}
 
-    const handleChange = (e: { target: { name: any; value: any; }; }) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+interface CarFormProps {
+    formData: FormData;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    isEdit: boolean;
+}
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        console.log(formData);
-    };
-
+const CarForm: React.FC<CarFormProps> = ({ formData, handleChange, handleSubmit, isEdit }) => {
     return (
         <form onSubmit={handleSubmit}>
                 <Grid item xs={12} sm={6} sx={{ marginBottom: '1.5rem' }}>
@@ -131,14 +127,14 @@ function CarmForm() {
                         }}
                     />
                 </Grid>
-                <Grid>                    
+                <Grid>
                     <Button type="submit" variant="contained" color="primary" sx={{ minWidth: '12rem', minHeight: '56px', marginLeft: '1rem', marginTop: '1rem' }}>
-                        Cadastrar
+                        {isEdit ? 'Salvar' : 'Cadastrar'}
                     </Button>
                 </Grid>
             </Grid>
         </form>
     );
-}
+};
 
-export default CarmForm;
+export default CarForm;
