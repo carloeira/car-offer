@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Box, createTheme, InputAdornment, Modal, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Box, createTheme, Modal, Typography } from '@mui/material';
 import axios from 'axios';
 import { ThemeProvider } from '@emotion/react';
-import CarmForm from './CarForm';
+import EditOfferFormComponent from './UpdateOffer';
 
 const darkTheme = createTheme({
     palette: {
@@ -12,8 +12,10 @@ const darkTheme = createTheme({
 
 function Admin() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [offers, setOffers] = useState<any[]>([]); 
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); 
+    const [offers, setOffers] = useState<any[]>([]);
+    const [selectedOffer, setSelectedOffer] = useState<any>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchOffers() {
@@ -46,8 +48,28 @@ function Admin() {
         }
     };
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const openModal = (offer: any) => {
+        setSelectedOffer(offer);
+        setIsEdit(offer !== null);
+        setIsModalOpen(true);
+    };
+    
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedOffer(null);
+        setIsEdit(false);
+    };
+
+    const updateOffer = async (updatedOffer: any) => {
+        try {
+            await axios.put(`http://localhost:3001/cars/${updatedOffer.id}`, updatedOffer);
+            const updatedOffers = offers.map(offer => (offer.id === updatedOffer.id ? updatedOffer : offer));
+            setOffers(updatedOffers);
+            console.log('Oferta atualizada com sucesso');
+        } catch (error) {
+            console.error('Erro ao atualizar oferta:', error);
+        }
+    };
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -68,11 +90,13 @@ function Admin() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         sx={{ 
                             width: { xs: '80%', sm: '100%' },
-                            marginBottom: { xs: 2, sm: 2 },
                             marginRight: { xs: 0, sm: 2 },
                             '@media (max-width: 600px)': {
                                 width: { xs: '100%', sm: 'calc(70% - 8px)' },
-                                marginRight: { xs: 0, sm: 0 }
+                                marginRight: { xs: 0, sm: 0 },
+                            },
+                            '@media (max-width: 700px)': {
+                                marginBottom: { xs: 2, sm: 2 },
                             },
                             '& .MuiOutlinedInput-root': { 
                             '& fieldset': { borderColor: '#1976d2' },
@@ -87,7 +111,7 @@ function Admin() {
                             }
                         }}
                     />
-                    <Button variant="contained" onClick={openModal}>Cadastrar</Button>
+                    <Button variant="contained" onClick={() => openModal(null)}>Nova Oferta</Button>
                 </Box>
                 <TableContainer component={Paper} sx={{ mt: 2 }}>
                     <Table>
@@ -120,7 +144,7 @@ function Admin() {
                                     <TableCell>{offer.cidade}</TableCell>
                                     <TableCell>{offer.dataCadastro}</TableCell>
                                     <TableCell>
-                                        <Button onClick={() => console.log("Editar oferta", offer.id)}>Editar</Button>
+                                        <Button onClick={() => openModal(offer)}>Editar</Button>
                                         <Button onClick={() => deleteOffer(offer.id)}>Excluir</Button>
                                     </TableCell>
                                 </TableRow>
@@ -146,10 +170,7 @@ function Admin() {
                         outline: 'none',
                         textAlign: 'center'
                     }}>
-                        <Typography variant="h5" component="h2" gutterBottom sx={{ color: 'white', padding: '20px' }}>
-                            Cadastrar Oferta
-                        </Typography>
-                        <CarmForm /> 
+                        <EditOfferFormComponent offer={{}} setOffers={setOffers} closeModal={closeModal} updateOffer={updateOffer} isEdit={false} />
                     </Box>
                 </Modal>
             </Box>
