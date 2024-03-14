@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Box, createTheme, InputAdornment } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Box, createTheme, InputAdornment, Modal, Typography } from '@mui/material';
 import axios from 'axios';
 import { ThemeProvider } from '@emotion/react';
+import CarmForm from './CarForm';
 
 const darkTheme = createTheme({
     palette: {
@@ -12,6 +13,7 @@ const darkTheme = createTheme({
 function Admin() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [offers, setOffers] = useState<any[]>([]); 
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); 
 
     useEffect(() => {
         async function fetchOffers() {
@@ -44,33 +46,49 @@ function Admin() {
         }
     };
 
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
     return (
         <ThemeProvider theme={darkTheme}>
             <Box sx={{ p: 2 }}>
-                <TextField
-                    label="Buscar"
-                    variant="outlined"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    sx={{ 
-                        width: '100%', 
-                        '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#1976d2' }, 
-                        '&:hover fieldset': { borderColor: '#1976d2' }, 
-                        '&.Mui-focused fieldset': { borderColor: '#1976d2' 
-                    } } }}
-                    InputLabelProps={{
-                        sx: {
-                            color: '#1976d2'
-                        }}}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Button>
-                                </Button>
-                            </InputAdornment>
-                        )
-                    }}
-                />
+                <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between',
+                    '@media (max-width: 700px)': {
+                        flexDirection: 'column', 
+                        alignItems: 'stretch', 
+                    }
+                }}>
+                    <TextField
+                        label="Buscar"
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        sx={{ 
+                            width: { xs: '80%', sm: '100%' },
+                            marginBottom: { xs: 2, sm: 2 },
+                            marginRight: { xs: 0, sm: 2 },
+                            '@media (max-width: 600px)': {
+                                width: { xs: '100%', sm: 'calc(70% - 8px)' },
+                                marginRight: { xs: 0, sm: 0 }
+                            },
+                            '& .MuiOutlinedInput-root': { 
+                            '& fieldset': { borderColor: '#1976d2' },
+                            '&:hover fieldset': { borderColor: '#1976d2' }, 
+                            '&.Mui-focused fieldset': { borderColor: '#1976d2' },
+                            '& .MuiInputBase-input': { color: '#1976d2' } 
+                            } 
+                        }}
+                        InputLabelProps={{
+                            sx: {
+                                color: '#1976d2'
+                            }
+                        }}
+                    />
+                    <Button variant="contained" onClick={openModal}>Cadastrar</Button>
+                </Box>
                 <TableContainer component={Paper} sx={{ mt: 2 }}>
                     <Table>
                         <TableHead>
@@ -110,6 +128,30 @@ function Admin() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Modal
+                    open={isModalOpen}
+                    onClose={closeModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4,
+                        width: 400,
+                        outline: 'none',
+                        textAlign: 'center'
+                    }}>
+                        <Typography variant="h5" component="h2" gutterBottom sx={{ color: 'white', padding: '20px' }}>
+                            Cadastrar Oferta
+                        </Typography>
+                        <CarmForm /> 
+                    </Box>
+                </Modal>
             </Box>
         </ThemeProvider>
     );

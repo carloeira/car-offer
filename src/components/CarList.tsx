@@ -34,18 +34,22 @@ const CarList = () => {
   };
 
   return (
-    <Box sx={{ overflow: 'hidden', paddingTop: '20px' }}>
+    <Box sx={{ overflow: 'hidden', padding: '1.5rem', margin: '1.5rem' }}>
       <Grid container spacing={2} justifyContent="center">
         {(loading ? Array.from(new Array(3)) : cars).map((car, index) => (
           <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
             <Card sx={{ height: '100%' }}>
               <CardActionArea onClick={() => handleOpenDetails(car.id)}>
+              {loading ? (
+                <Skeleton variant="rectangular" height={200} />
+                ) : (
                 <CardMedia
-                  component="img"
-                  height="200"
-                  image={loading ? undefined : car?.fotos[0]}
-                  alt={`${loading ? 'Carregando' : car?.marca} ${loading ? '...' : car?.modelo}`}
+                    component="img"
+                    height="200"
+                    image={car?.fotos[0] || undefined}
+                    alt={`${car?.marca || 'Carregando'} ${car?.modelo || '...'} `}
                 />
+            )}
                 <CardContent>
                   <Typography gutterBottom variant="h6">
                     {loading ? <Skeleton /> : `${car?.marca} ${car?.modelo}`}
