@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { TextField, Button, Grid, Input, FilledTextFieldProps, OutlinedTextFieldProps, StandardTextFieldProps, TextFieldVariants } from '@mui/material';
-import { JSX } from 'react/jsx-runtime';
-import InputMask from 'react-input-mask';
+import { TextField, Button, Grid, Input } from '@mui/material';
 
 function CarmForm() {
     const [formData, setFormData] = useState({
@@ -60,17 +58,24 @@ function CarmForm() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <InputMask 
-                    mask="9999" 
-                    value={formData.ano} 
-                    onChange={(e: { target: { value: any; }; }) => handleChange({ target: { name: 'ano', value: e.target.value } })}>
-                        {(inputProps: JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined; } & Omit<FilledTextFieldProps | OutlinedTextFieldProps | StandardTextFieldProps, "variant">) => <TextField {...inputProps} name="ano" label="Ano" variant="outlined" fullWidth />}
-                    </InputMask>
+                    <TextField
+                        name="ano"
+                        label="Ano"
+                        variant="outlined"
+                        value={formData.ano}
+                        onChange={handleChange}
+                        fullWidth
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <InputMask mask="R$ 999999" maskChar={null} value={formData.preco} onChange={(e: { target: { value: any; }; }) => handleChange({ target: { name: 'preco', value: e.target.value } })}>
-                        {(inputProps: JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined; } & Omit<FilledTextFieldProps | OutlinedTextFieldProps | StandardTextFieldProps, "variant">) => <TextField {...inputProps} name="preco" label="Preço" variant="outlined" fullWidth />}
-                    </InputMask>
+                    <TextField
+                        name="preco"
+                        label="Preço"
+                        variant="outlined"
+                        value={formData.preco}
+                        onChange={handleChange}
+                        fullWidth
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -83,9 +88,14 @@ function CarmForm() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <InputMask mask="99999 km" maskChar={null} value={formData.quilometragem} onChange={(e: { target: { value: any; }; }) => handleChange({ target: { name: 'quilometragem', value: e.target.value } })}>
-                        {(inputProps: JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined; } & Omit<FilledTextFieldProps | OutlinedTextFieldProps | StandardTextFieldProps, "variant">) => <TextField {...inputProps} name="quilometragem" label="Quilometragem" variant="outlined" fullWidth />}
-                    </InputMask>
+                    <TextField
+                        name="quilometragem"
+                        label="km"
+                        variant="outlined"
+                        value={formData.quilometragem}
+                        onChange={handleChange}
+                        fullWidth
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -122,7 +132,7 @@ function CarmForm() {
                     />
                 </Grid>
                 <Grid>                    
-                    <Button type="submit" variant="contained" color="primary" sx={{ minWidth: '12rem', minHeight: '3.5rem', marginLeft: '1rem', marginTop: '1rem' }}>
+                    <Button type="submit" variant="contained" color="primary" sx={{ minWidth: '12rem', minHeight: '56px', marginLeft: '1rem', marginTop: '1rem' }}>
                         Cadastrar
                     </Button>
                 </Grid>
