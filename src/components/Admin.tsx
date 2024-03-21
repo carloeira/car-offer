@@ -10,6 +10,7 @@ const darkTheme = createTheme({
     },
 });
 
+
 function Admin() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [offers, setOffers] = useState<any[]>([]);
@@ -66,6 +67,7 @@ function Admin() {
             const updatedOffers = offers.map(offer => (offer.id === updatedOffer.id ? updatedOffer : offer));
             setOffers(updatedOffers);
             console.log('Oferta atualizada com sucesso');
+            closeModal(); // Fechar o modal após a atualização
         } catch (error) {
             console.error('Erro ao atualizar oferta:', error);
         }
@@ -170,7 +172,7 @@ function Admin() {
                         outline: 'none',
                         textAlign: 'center'
                     }}>
-                        <EditOfferFormComponent offer={{}} setOffers={setOffers} closeModal={closeModal} updateOffer={updateOffer} isEdit={false} />
+                        <EditOfferFormComponent offer={selectedOffer} setOffers={setOffers} closeModal={closeModal} updateOffer={updateOffer} isEdit={isEdit} />
                     </Box>
                 </Modal>
             </Box>
