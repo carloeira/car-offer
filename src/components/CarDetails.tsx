@@ -6,7 +6,7 @@ import axios from 'axios';
 import Carousel from 'react-material-ui-carousel';
 
 const CarDetails = () => {
-  const [car, setCar] = useState(null);
+  const [car, setCar] = useState(true);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
@@ -14,9 +14,10 @@ const CarDetails = () => {
     const fetchCarDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:3001/cars/${id}`);
-        setCar(response.data);
+        const updatedCar = { ...response.data, visualizacoes: response.data.visualizacoes + 1 };
+        await axios.put(`http://localhost:3001/cars/${id}`, updatedCar);
+        setCar(updatedCar);
         setLoading(false);
-        updateViews(id);
       } catch (error) {
         console.error('Error fetching car details:', error);
       }
@@ -24,22 +25,6 @@ const CarDetails = () => {
 
     fetchCarDetails();
   }, [id]);
-
-  const updateViews = async (offerId: string | undefined) => {
-    try {
-      const response = await axios.put(`http://localhost:3001/cars/${offerId}/visualizacoes`, {
-        userId: 'id_do_usuario',
-      });
-  
-      if (response.status === 200) {
-        console.log('Visualização da oferta atualizada com sucesso');
-      } else {
-        throw new Error('Erro ao atualizar as visualizações da oferta');
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar as visualizações da oferta:', onmessage);
-    }
-  };
 
   return (
     <Box sx={{ overflow: 'hidden', padding: '1.5rem' }}>
